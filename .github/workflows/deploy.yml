@@ -37,7 +37,7 @@ jobs:
           npm run build -- \
             --configuration production \
             --base-href="/${{ steps.repo-name.outputs.repo_name }}/" \
-            --output-path=dist/Jeopardy/browser
+            --output-path=dist/Jeopardy/
         # Adjust the output path if your project name is different
         # You can also set outputPath in angular.json and omit --output-path
 
