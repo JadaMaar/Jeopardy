@@ -8,16 +8,14 @@ import {FormsModule} from '@angular/forms';
 @Component({
   selector: 'app-home',
   imports: [
-    RouterLink,
     NgForOf,
     FormsModule,
-    NgIf
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  boards: any;
+  boards: any = [];
   showBoardModal = false;
   newBoardName = '';
 
@@ -41,17 +39,13 @@ export class Home implements OnInit {
     }
   }
 
-  constructor(private http: HttpClient, private router: Router, private cd: ChangeDetectorRef) {}
+  constructor(private router: Router, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadBoards()
   }
 
   loadBoards() {
-    /*this.http.get<any[]>('assets/boards.json').subscribe(data => {
-      this.boards = data;
-      this.cd.detectChanges(); // force Angular to update the view
-    });*/
     const localStorageBoards = localStorage.getItem("boards");
     if (localStorageBoards) {
       this.boards = JSON.parse(localStorageBoards);
