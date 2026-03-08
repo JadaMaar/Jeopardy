@@ -43,7 +43,7 @@ jobs:
 
       # Allow routing on GitHub Pages
       - name: Create 404.html
-        run: cp dist/Jeopardy/browser/index.html dist/Jeopardy/browser/404.html
+        run: cp browser/index.html browser/404.html
 
       - name: Add .nojekyll file 🚫
         run: touch dist/Jeopardy/browser/.nojekyll
