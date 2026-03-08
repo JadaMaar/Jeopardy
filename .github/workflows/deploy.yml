@@ -1,75 +1,68 @@
+# Simple workflow for deploying Angular app to GitHub Pages
 name: Deploy to GitHub Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
     branches:
-      - master  # or master, depending on your default branch
-  workflow_dispatch: # allows manual triggering
+      - master   # or main – change if needed
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-  contents: write  # needed to push to gh-pages branch
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ⚙️
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Install dependencies 📦
+      - name: Install dependencies
         run: npm ci
 
-      - name: Get repository name 🏷️
-        id: repo-name
-        run: |
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          echo "repo_name=$REPO_NAME" >> $GITHUB_OUTPUT
-          echo "Base-href will be: /$REPO_NAME/"
-
-      - name: Build Angular app 🔨
+      - name: Build Angular app
         run: |
           npm run build -- \
             --configuration production \
-            --base-href="/${{ steps.repo-name.outputs.repo_name }}/" \
-            --output-path=dist/Jeopardy/
-        # Adjust the output path if your project name is different
-        # You can also set outputPath in angular.json and omit --output-path
+            --base-href="/${{ github.event.repository.name }}/"
 
-      - name: List build output 📂
-        run: |
-          ls -la dist/
-          ls -la dist/Jeopardy/ || echo "dist/Jeopardy not found"
-          ls -la dist/Jeopardy/browser/ || echo "dist/Jeopardy/browser not found"
-
-      - name: Determine build output path
-        id: output-path
-        run: |
-          if [ -d "dist/Jeopardy/browser" ]; then
-            echo "path=dist/Jeopardy/browser" >> $GITHUB_OUTPUT
-          else
-            echo "path=dist/Jeopardy" >> $GITHUB_OUTPUT
-          fi
-
-      # Allow routing on GitHub Pages
+      # Create 404.html for routing support (copies index.html)
       - name: Create 404.html
-        run: cp dist/Jeopardy/browser/index.html dist/Jeopardy/browser/404.html
+        run: cp dist/Jeopardy/index.html dist/Jeopardy/404.html
 
-      - name: Add .nojekyll file 🚫
-        run: touch dist/Jeopardy/browser/.nojekyll
-        # Update the path if your project name differs
+      # Add .nojekyll to disable Jekyll processing
+      - name: Add .nojekyll
+        run: touch dist/Jeopardy/.nojekyll
 
-      - name: Deploy to GitHub Pages 🚀
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/Jeopardy/browser
-          publish_branch: gh-pages  # default branch for GitHub Pages
-          keep_files: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          # Path to the build output folder
+          path: './dist/Jeopardy'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
