@@ -5,7 +5,9 @@ import {QuillEditorComponent} from 'ngx-quill';
 import {FormsModule} from '@angular/forms';
 import Quill from 'quill';
 import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
+import BlotFormatter from '@enzedonline/quill-blot-formatter2';
 
+Quill.register('modules/blotFormatter', BlotFormatter);
 
 @Component({
   selector: 'app-jeopardy-edit',
@@ -28,7 +30,18 @@ export class JeopardyEdit implements OnInit {
     toolbar: [
       ['bold', 'italic', 'underline'],
       ['link', 'image', 'video']
-    ]
+    ],
+    blotFormatter: {
+      // optional: override default options
+      resize: {
+        handleStyle: {
+          backgroundColor: '#1e3a8a',
+          border: '2px solid white',
+          width: '12px',
+          height: '12px'
+        }
+      }
+    }
   };
 
   boardId?: string;
