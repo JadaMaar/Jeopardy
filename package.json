@@ -2,6 +2,8 @@
   "name": "jeopardy",
   "version": "0.0.0",
   "scripts": {
+    "build:prod": "ng build --configuration production --base-href Jeopardy",
+    "deploy": "npx angular-cli-ghpages --dir=dist/Jeopardy",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
