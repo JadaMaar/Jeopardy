@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master  # or master, depending on your default branch
+  workflow_dispatch: # allows manual triggering
+
+permissions:
+  contents: write  # needed to push to gh-pages branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies 📦
+        run: npm ci
+
+      - name: Get repository name 🏷️
+        id: repo-name
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          echo "repo_name=$REPO_NAME" >> $GITHUB_OUTPUT
+          echo "Base-href will be: /$REPO_NAME/"
+
+      - name: Build Angular app 🔨
+        run: |
+          npm run build -- \
+            --configuration production \
+            --base-href="/${{ steps.repo-name.outputs.repo_name }}/" \
+            --output-path=dist/Jeopardy/browser
+        # Adjust the output path if your project name is different
+        # You can also set outputPath in angular.json and omit --output-path
+
+      - name: Add .nojekyll file 🚫
+        run: touch dist/Jeopardy/browser/.nojekyll
+        # Update the path if your project name differs
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/Jeopardy/browser
+          publish_branch: gh-pages  # default branch for GitHub Pages
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
