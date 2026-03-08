@@ -1,0 +1,75 @@
+<section class="section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="level">
+      <div class="level-left">
+        <h1 class="title">Jeopardy Boards</h1>
+      </div>
+      <div class="level-right">
+        <button class="button" (click)="exportBoards()">
+          ⬇ Export
+        </button>
+
+        <label class="button is-link">
+          ⬆ Import
+          <input type="file"
+                 accept=".json"
+                 hidden
+                 (change)="importBoards($event)">
+        </label>
+
+        <button class="button is-primary" (click)="openNewBoardModal()">
+          + Create New Board
+        </button>
+      </div>
+    </div>
+    <!-- Modal popup -->
+    @if (showBoardModal) {
+      <div class="modal">
+        <div class="modal-content">
+          <h2>Name Your Board</h2>
+          <input
+            type="text"
+            [(ngModel)]="newBoardName"
+            placeholder="Enter board name"
+            (keyup.enter)="createNewBoard()"
+          />
+          <div class="modal-actions">
+            <button class="button" (click)="createNewBoard()">Create</button>
+            <button class="button secondary" (click)="closeModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Board List -->
+    <div class="columns is-multiline">
+      <div class="column is-one-third" *ngFor="let board of boards">
+        <div class="card">
+          <div class="card-content">
+            <p class="title is-5">{{ board.name }}</p>
+          </div>
+
+          <footer class="card-footer">
+            <a class="card-footer-item has-text-success"
+               (click)="playBoard(board)">
+              ▶ Play
+            </a>
+
+            <a class="card-footer-item has-text-link"
+               (click)="editBoard(board)">
+              ✎ Edit
+            </a>
+
+            <a class="card-footer-item has-text-danger"
+               (click)="deleteBoard(board); $event.stopPropagation()">
+              🗑 Delete
+            </a>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
