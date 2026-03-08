@@ -1,22 +1,16 @@
-# Simple workflow for deploying Angular app to GitHub Pages
 name: Deploy to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches:
-      - master   # or main – change if needed
-
-  # Allows you to run this workflow manually from the Actions tab
+      - master
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -46,13 +40,41 @@ jobs:
             --configuration production \
             --base-href="/${{ github.event.repository.name }}/"
 
-      # Create 404.html for routing support (copies index.html)
-      - name: Create 404.html
-        run: cp dist/Jeopardy/index.html dist/Jeopardy/404.html
+      # DEBUG: List dist contents
+      - name: List build output
+        run: |
+          echo "=== dist/ contents ==="
+          ls -la dist/
+          echo "=== Looking for Jeopardy folder ==="
+          if [ -d "dist/Jeopardy" ]; then
+            echo "✅ dist/Jeopardy exists"
+            ls -la dist/Jeopardy/
+          else
+            echo "❌ dist/Jeopardy not found"
+          fi
+          if [ -d "dist/Jeopardy/browser" ]; then
+            echo "✅ dist/Jeopardy/browser exists"
+            ls -la dist/Jeopardy/browser/
+          fi
 
-      # Add .nojekyll to disable Jekyll processing
+      # Determine the correct publish directory
+      - name: Set publish directory
+        id: publish-dir
+        run: |
+          if [ -d "dist/Jeopardy/browser" ]; then
+            echo "dir=dist/Jeopardy/browser" >> $GITHUB_OUTPUT
+          elif [ -d "dist/Jeopardy" ]; then
+            echo "dir=dist/Jeopardy" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Could not find build output directory"
+            exit 1
+          fi
+
+      - name: Create 404.html
+        run: cp ${{ steps.publish-dir.outputs.dir }}/index.html ${{ steps.publish-dir.outputs.dir }}/404.html
+
       - name: Add .nojekyll
-        run: touch dist/Jeopardy/.nojekyll
+        run: touch ${{ steps.publish-dir.outputs.dir }}/.nojekyll
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -60,8 +82,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Path to the build output folder
-          path: './dist/Jeopardy'
+          path: ${{ steps.publish-dir.outputs.dir }}
 
       - name: Deploy to GitHub Pages
         id: deployment
