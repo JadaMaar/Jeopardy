@@ -141,7 +141,6 @@ export class JeopardyEdit implements OnInit {
 
   drop(event: CdkDragDrop<any>) {
     const a = event.item.data;                 // dragged cell
-    const b = event.container.data?.target;   // not used here
 
     const target = event.dropPoint
       ? this.getCellFromPoint(event.dropPoint.x, event.dropPoint.y)
@@ -183,13 +182,13 @@ export class JeopardyEdit implements OnInit {
     }
   }
 
-  showAnswer(q: any, rowIndex: number, catIndex: number) {
+  showAnswer(q: any) {
     if (!q) return;
     const answer = q.answer ?? q.value ?? '';
     q._previewContent = this.parseDelta(answer);
   }
 
-  showQuestion(q: any, rowIndex: number, catIndex: number) {
+  showQuestion(q: any) {
     if (!q) return;
     q._previewContent = this.getPreviewContent(q);
   }
@@ -205,7 +204,6 @@ export class JeopardyEdit implements OnInit {
 
   saveAndExit() {
     // Persist to localStorage
-    localStorage.setItem('board', JSON.stringify(this.board));
     const localStorageBoards = localStorage.getItem("boards");
     if (localStorageBoards) {
       const boards = JSON.parse(localStorageBoards);

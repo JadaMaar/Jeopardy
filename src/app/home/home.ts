@@ -1,7 +1,6 @@
-import {ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
-import {NgForOf, NgIf} from '@angular/common';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {NgForOf} from '@angular/common';
 import { saveAs } from 'file-saver';
 import {FormsModule} from '@angular/forms';
 
@@ -56,12 +55,10 @@ export class Home implements OnInit {
 
 
   playBoard(board: any) {
-    // localStorage.setItem('board', JSON.stringify(board))
     this.router.navigate(['/jeopardy', board.id]);
   }
 
   editBoard(board: any) {
-    // localStorage.setItem('board', JSON.stringify(board))
     this.router.navigate(['/edit', board.id]);
   }
 
@@ -119,7 +116,6 @@ export class Home implements OnInit {
           ]
       }
     this.boards.push(newBoard);
-    // localStorage.setItem('board', JSON.stringify(newBoard))
     localStorage.setItem('boards', JSON.stringify(this.boards))
     this.router.navigate(['/edit', nextId]);
   }
