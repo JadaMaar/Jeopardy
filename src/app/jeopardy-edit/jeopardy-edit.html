@@ -53,8 +53,8 @@
              [attr.data-cat]="catIndex"
              [attr.data-row]="rowIndex"
              [cdkDragData]="{ catIndex: catIndex, rowIndex: rowIndex }"
-             (mouseenter)="showAnswer(category.questions[rowIndex], rowIndex, catIndex)"
-             (mouseleave)="showQuestion(category.questions[rowIndex], rowIndex, catIndex)"
+             (mouseenter)="showAnswer(category.questions[rowIndex])"
+             (mouseleave)="showQuestion(category.questions[rowIndex])"
              (click)="selectQuestion(catIndex, rowIndex)">
           <quill-editor
             class="centered-quill"
