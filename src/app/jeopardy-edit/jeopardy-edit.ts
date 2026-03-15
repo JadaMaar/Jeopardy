@@ -29,7 +29,9 @@ export class JeopardyEdit implements OnInit {
   modules = {
     toolbar: [
       ['bold', 'italic', 'underline'],
-      ['link', 'image', 'video']
+      [{ 'align': [] }],
+      ['link', 'image', 'video'],
+      [{ 'color': [] }, { 'background': [] }],
     ],
     blotFormatter: {
       // optional: override default options

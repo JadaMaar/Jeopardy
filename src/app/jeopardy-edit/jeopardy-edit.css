@@ -53,6 +53,25 @@ quill-editor {
   height: 100%;
 }
 
+:host ::ng-deep .ql-editor {
+  font-size: 1rem;
+}
+
+/* Force all text in the Quill editor to appear left-aligned */
+quill-editor ::ng-deep .ql-editor .ql-align-center,
+quill-editor ::ng-deep .ql-editor .ql-align-right,
+quill-editor ::ng-deep .ql-editor .ql-align-justify {
+  text-align: left !important;
+}
+
+/* If you also want to handle right-to-left or other direction */
+quill-editor ::ng-deep .ql-editor[dir="rtl"] {
+  direction: ltr !important;
+  text-align: left !important;
+}
+
+
+
 /* preview editor styling */
 quill-editor.centered-quill {
   width: 90%;

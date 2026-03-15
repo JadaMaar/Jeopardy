@@ -31,23 +31,6 @@
 }
 
 
-.modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 500px;
-}
-
 quill-editor {
   width: 90%;
   border-width: 0;
@@ -67,10 +50,7 @@ quill-editor {
 }
 
 :host ::ng-deep .ql-editor {
-  display: flex;
-  justify-content: center; /* center text horizontally */
   align-items: center;     /* center text vertically */
-  text-align: center;
   font-size: 2rem;
   height: 100%;
   padding: 0;              /* remove extra padding for perfect centering */
